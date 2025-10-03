@@ -37,7 +37,7 @@ export class Lexer {
     }
 
     // number
-    if (/[0-9\-]/.test(c)){
+    if (/[-0-9]/.test(c)) {
       let j = this.i;
       let dot = false;
       if (this.a[j] === "-") j++;

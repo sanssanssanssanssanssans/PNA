@@ -12,6 +12,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "no-constant-condition": ["error", { "checkLoops": false }],
     "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
     "no-console": "off"
   },
