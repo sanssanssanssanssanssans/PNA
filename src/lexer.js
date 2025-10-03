@@ -61,7 +61,7 @@ export class Lexer {
     }
 
     let j = this.i;
-    while (j<this.a.length && /[A-Za-z0-9_\.]/.test(this.a[j])) j++;
+    while (j<this.a.length && /[A-Za-z0-9_.]/.test(this.a[j])) j++;
     const id = this.a.slice(this.i, j);
     this.i = j;
     if (id === "true")  return {t:TT.BOOL, v:true};
