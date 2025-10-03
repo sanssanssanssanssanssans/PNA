@@ -1,6 +1,6 @@
 {
   "name": "pna-js",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "bin": { "pna": "./bin/pna.js" },
   "scripts": {
@@ -11,10 +11,6 @@
     "test": "node ./bin/pna.js ./examples/demo.pna > /dev/null"
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-promise": "^6.4.0"
+    "eslint": "^8.57.0"
   }
 }
