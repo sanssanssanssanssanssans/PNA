@@ -1,6 +1,6 @@
 # PNA-JS (Portable Notation for Actions — JavaScript Interpreter)
 
-**PNA**는 간단한 스크립트 문법(객체/속성, 조건, 반복, 입력, 로그)을 가진 경량 DSL입니다.  
+**PNA**는 간단한 스크립트 문법을 추구하는 프로그래밍 언어입니다.
 이 저장소는 **Node.js 런타임용 인터프리터**를 제공합니다.
 
 ## 설치 & 실행
