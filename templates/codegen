@@ -1,0 +1,13 @@
+/* === PNA RUNTIME BEGIN === */
+{{RUNTIME}}
+/* === PNA RUNTIME END === */
+
+namespace pna_prog {
+int pna_main(){
+  Env env;
+{{BODY}}
+  return 0;
+}
+} // namespace pna_prog
+
+int main(){ return pna_prog::pna_main(); }
