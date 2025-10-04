@@ -85,7 +85,6 @@ break
 continue
 ```
 
-<<<<<<< HEAD
 ## 표현식
 - 숫자, 문자열("..."), 불리언(true/false)
 - 연산자: + - * / %, 비교 == != < <= > >=, 논리 && || !
@@ -93,28 +92,3 @@ continue
 - 변수 참조:
     - 객체 속성: user.name
     - 스칼라 변수: i
-=======
-Expressions:
-- literals: numbers, strings ("..."), booleans (true/false)
-- operators: + - * / %, == != < <= > >=, logical && || !
-- string concatenation with +
-- variables: user.name, i
-
-## Examples
-```
-cargo run -- examples/02_cond.pna -o out.cpp
-g++ -std=c++20 out.cpp -o out && ./out
-```
-
-## Project Layout
-- src/ — lexer, parser, AST, C++ codegen
-- examples/ — sample PNA programs
-- scripts/ — basic e2e test scripts
-- .github/workflows/ci.yml — format, clippy, and example runs on CI
-
-## Contributing
-See CONTRIBUTE.md.
-
-## License
-MIT
->>>>>>> 29c95c9 (dd)
