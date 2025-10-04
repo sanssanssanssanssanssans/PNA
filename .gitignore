@@ -1,4 +1,14 @@
-node_modules/
-dist/
+/target
+**/*.rs.bk
 .DS_Store
-*.log
+.vscode/
+.idea/
+/out
+/out.exe
+/out.cpp
+*.o
+*.obj
+*.exe
+examples/*.out
+examples/*.actual
+examples/*.expect

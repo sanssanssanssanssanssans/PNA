@@ -1,0 +1,6 @@
+i: 0
+loop (i < 3) -> {
+  log i
+  i: i + 1
+}
+end

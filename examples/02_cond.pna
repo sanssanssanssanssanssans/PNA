@@ -1,0 +1,11 @@
+user: {
+  name: "Bob",
+  age: 17,
+}
+
+cond (user.age >= 18) -> {
+  log "adult"
+} else -> {
+  log "minor"
+}
+end

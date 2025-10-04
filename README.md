@@ -1,55 +1,55 @@
-# PNA-JS (Portable Notation for Actions — JavaScript Interpreter)
+# PNA-CC
 
+<<<<<<< HEAD
 **PNA**는 간단한 스크립트 문법을 추구하는 프로그래밍 언어입니다.
 이 저장소는 **Node.js 런타임용 인터프리터**를 제공합니다.
+=======
+Rust-based front-end that compiles the PNA language to a single self-contained C++ file (`out.cpp`) embedding a tiny runtime. The generated file builds with a standard C++20 compiler.
+>>>>>>> 29c95c9 (dd)
 
-## 설치 & 실행
+## Status
+- Minimal compiler focused on core syntax.
+- Targets C++ only. (WASM backend removed.)
 
-```bash
-# 프로젝트 폴더로 이동
-npm install
-npm run start     # examples/demo.pna 실행
-# 또는
-node ./bin/pna.js path/to/file.pna
+## Requirements
+- Rust (stable)
+- A C++20 compiler (GCC/Clang/MSVC; MinGW GCC recommended on Windows)
+
+## Quick Start
+```
+cargo run -- <input.pna> -o out.cpp
+g++ -std=c++20 out.cpp -o out && ./out
 ```
 
-# 문법 (기본)
+## Language (currently supported)
 
-## 1) 객체 블록
-```pna
+Object block:
+```
 user: {
   name: "Alice",
   age: 20,
 }
 ```
 
-## 2) 속성 대입
-```pna
+Property assign:
+```
 user.age: 21
 ```
 
-## 3) 스칼라 대입
-```pna
+Scalar assign:
+```
 i: 0
 ```
 
-## 4) 출력
-```pna
+Print:
+```
 log user.name
 log upper user.name
 log "hi " + user.name
 ```
 
-## 5) 조건
-```pna
-cond (user.age >= 18) -> {
-  log "adult"
-}
-end
+Condition:
 ```
-
-- Else 문
-```pna
 cond (user.age >= 18) -> {
   log "adult"
 } else -> {
@@ -58,14 +58,14 @@ cond (user.age >= 18) -> {
 end
 ```
 
-## 6) 입력
+Input:
 ```
 input "Your name?" -> user.name
-input "NO" -> cmd       # 프롬프트 없이 입력
+input "NO" -> cmd
 ```
 
-## 7) 반복문
-```pna
+Loop:
+```
 i: 0
 loop (i < 3) -> {
   log i
@@ -74,12 +74,18 @@ loop (i < 3) -> {
 end
 ```
 
-## 8) 제어문
-```pna
+While with ended, and control flow:
+```
+while (cond) -> {
+  ...
+} ended {
+  ...
+}
 break
 continue
 ```
 
+<<<<<<< HEAD
 ## 표현식
 - 숫자, 문자열("..."), 불리언(true/false)
 - 연산자: + - * / %, 비교 == != < <= > >=, 논리 && || !
@@ -87,3 +93,28 @@ continue
 - 변수 참조:
     - 객체 속성: user.name
     - 스칼라 변수: i
+=======
+Expressions:
+- literals: numbers, strings ("..."), booleans (true/false)
+- operators: + - * / %, == != < <= > >=, logical && || !
+- string concatenation with +
+- variables: user.name, i
+
+## Examples
+```
+cargo run -- examples/02_cond.pna -o out.cpp
+g++ -std=c++20 out.cpp -o out && ./out
+```
+
+## Project Layout
+- src/ — lexer, parser, AST, C++ codegen
+- examples/ — sample PNA programs
+- scripts/ — basic e2e test scripts
+- .github/workflows/ci.yml — format, clippy, and example runs on CI
+
+## Contributing
+See CONTRIBUTE.md.
+
+## License
+MIT
+>>>>>>> 29c95c9 (dd)

@@ -1,0 +1,16 @@
+k: 0
+while (k < 0) -> {
+  k: k + 1
+} ended {
+  log "while body did not run"
+}
+end
+
+m: 0
+while (m < 3) -> {
+  m: m + 1
+  cond (m == 2) -> { break } end
+} ended {
+  log "this will NOT print because of break"
+}
+end
