@@ -1,0 +1,1 @@
+cargo run -- boj/1000.pna -o out.cpp

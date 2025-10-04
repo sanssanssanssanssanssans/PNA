@@ -24,12 +24,6 @@ inline bool is_str(const Value& x){ return std::holds_alternative<std::string>(x
 inline bool is_bool(const Value& x){ return std::holds_alternative<bool>(x.v); }
 inline bool is_obj(const Value& x){ return std::holds_alternative<std::map<std::string,Value>>(x.v); }
 
-inline double as_num(const Value& x){
-  if(is_num(x)) return std::get<double>(x.v);
-  if(is_bool(x)) return std::get<bool>(x.v)?1:0;
-  if(is_str(x)) { try{ return std::stod(std::get<std::string>(x.v)); }catch(...){ return 0; } }
-  return 0;
-}
 
 inline std::string as_str(const Value& x){
   if(is_str(x)) return std::get<std::string>(x.v);
@@ -44,6 +38,13 @@ inline std::string as_str(const Value& x){
     return s;
   }
   return "";
+}
+inline double as_num(const Value& v) {
+    std::string s = as_str(v);
+    char* end = nullptr;
+    double d = std::strtod(s.c_str(), &end);
+    if (end == s.c_str()) return 0.0;
+    return d;
 }
 
 inline bool truthy(const Value& x){
@@ -76,12 +77,21 @@ inline void  pna_set_prop(Env& e,const std::string& base,const std::string& key,
   pna_set(e,base,b);
 }
 
-inline void  pna_log(const Value& v){ std::cout<<as_str(v)<<'\n'; }
-inline Value pna_input(const std::string& prompt){
-  if(prompt!="NO") std::cout<<prompt<<" "<<std::flush;
-  std::string s; std::getline(std::cin,s);
-  try{ size_t pos=0; double d=std::stod(s,&pos); if(pos==s.size()) return Value(d); }catch(...){}
-  return Value(s);
+inline Value pna_input(const char* prompt) {
+    if (prompt && prompt[0] != '\0') { std::cout << prompt; std::cout.flush(); }
+    std::string s;
+    if (!(std::cin >> s)) s = "";
+    char* end = nullptr;
+    double d = std::strtod(s.c_str(), &end);
+    if (end != s.c_str() && *end == '\0') {
+        return Value(d);
+    }
+    return Value(s);
+}
+
+
+inline void pna_log(const Value& v) {
+    std::cout << as_str(v) << '\n';
 }
 
 inline Value pna_add(const Value&a,const Value&b){ if(is_str(a)||is_str(b)) return Value(as_str(a)+as_str(b)); return Value(as_num(a)+as_num(b)); }
