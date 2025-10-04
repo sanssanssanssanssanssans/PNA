@@ -21,8 +21,27 @@ inline bool is_obj(const Value& x){ return std::holds_alternative<std::map<std::
 
 inline std::string as_str(const Value& x){
   if(is_str(x)) return std::get<std::string>(x.v);
-  if(is_num(x)){ std::ostringstream oss; oss<<std::get<double>(x.v); return oss.str(); }
-  if(is_bool(x)) return std::get<bool>(x.v)?"true":"false";
+
+  if(is_num(x)){
+    double d = std::get<double>(x.v);
+    double rd = std::round(d);
+    if (std::fabs(d - rd) < 1e-9) {
+      std::ostringstream oss;
+      oss.setf(std::ios::fixed, std::ios::floatfield);
+      oss << std::setprecision(0) << rd;
+      return oss.str();
+    } else {
+      std::ostringstream oss;
+      oss.setf(std::ios::fixed, std::ios::floatfield);
+      oss << std::setprecision(12) << d;
+      std::string s = oss.str();
+      while (!s.empty() && s.back() == '0') s.pop_back();
+      if (!s.empty() && s.back() == '.') s.pop_back();
+      return s;
+    }
+  }
+
+  if(is_bool(x)) return std::get<bool>(x.v) ? "true" : "false";
   if(is_obj(x)){
     std::string s="{"; bool first=true;
     for(auto&kv:std::get<std::map<std::string,Value>>(x.v)){
