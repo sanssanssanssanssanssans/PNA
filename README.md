@@ -1,12 +1,5 @@
 # PNA-CC
 
-<<<<<<< HEAD
-**PNA**는 간단한 스크립트 문법을 추구하는 프로그래밍 언어입니다.
-이 저장소는 **Node.js 런타임용 인터프리터**를 제공합니다.
-=======
-Rust-based front-end that compiles the PNA language to a single self-contained C++ file (`out.cpp`) embedding a tiny runtime. The generated file builds with a standard C++20 compiler.
->>>>>>> 29c95c9 (dd)
-
 ## Status
 - Minimal compiler focused on core syntax.
 - Targets C++ only. (WASM backend removed.)
