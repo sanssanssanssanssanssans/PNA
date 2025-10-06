@@ -21,6 +21,7 @@ pub fn lex(s: &str) -> Result<Vec<Tok>, LexError> {
 
     while i < b.len() {
         let c = b[i];
+
         if c.is_ascii_whitespace() {
             i += 1;
             continue;
@@ -199,6 +200,12 @@ pub fn lex(s: &str) -> Result<Vec<Tok>, LexError> {
                         "input" => Some(Tok::KwInput),
                         "break" => Some(Tok::KwBreak),
                         "continue" => Some(Tok::KwContinue),
+                        "function" => Some(Tok::KwFunction),
+                        "return" => Some(Tok::KwReturn),
+                        "double" => Some(Tok::TyDouble),
+                        "int" => Some(Tok::TyInt),
+                        "string" => Some(Tok::TyString),
+                        "void" => Some(Tok::TyVoid),
                         _ => None,
                     };
                     out.push(kw.unwrap_or(Tok::Ident(id)));
@@ -208,6 +215,6 @@ pub fn lex(s: &str) -> Result<Vec<Tok>, LexError> {
             }
         }
     }
-    out.push(Tok::Eof);
+
     Ok(out)
 }

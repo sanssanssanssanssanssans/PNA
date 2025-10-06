@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone)]
 pub enum Tok {
     Ident(String),
     Number(f64),
@@ -15,6 +15,12 @@ pub enum Tok {
     KwInput,
     KwBreak,
     KwContinue,
+    KwFunction,
+    KwReturn,
+    TyDouble,
+    TyInt,
+    TyString,
+    TyVoid,
     LBrace,
     RBrace,
     LParen,

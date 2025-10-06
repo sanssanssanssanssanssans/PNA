@@ -20,7 +20,6 @@ fn bump(p: &mut Parser) -> Tok {
     }
     t
 }
-
 fn expect(p: &mut Parser, want: Tok) -> Tok {
     let t = bump(p);
     if std::mem::discriminant(&t) != std::mem::discriminant(&want) {
@@ -33,9 +32,68 @@ pub fn parse(toks: Vec<Tok>) -> Result<Program, String> {
     let mut p = Parser { toks, i: 0 };
     let mut items = Vec::new();
     while !is_eof(peek(&p)) {
-        items.push(parse_stmt(&mut p)?);
+        match peek(&p) {
+            Tok::KwFunction => items.push(parse_func(&mut p)?),
+            _ => items.push(Item::Stmt(parse_stmt(&mut p)?)),
+        }
     }
     Ok(Program { items })
+}
+
+fn parse_type(p: &mut Parser) -> Result<Ty, String> {
+    Ok(match bump(p) {
+        Tok::TyDouble => Ty::Double,
+        Tok::TyInt => Ty::Int,
+        Tok::TyString => Ty::String,
+        Tok::TyVoid => Ty::Void,
+        t => return Err(format!("type expected, got {:?}", t)),
+    })
+}
+
+fn parse_params(p: &mut Parser) -> Result<Vec<Param>, String> {
+    let mut ps = Vec::new();
+    if let Tok::RParen = peek(p) {
+        return Ok(ps);
+    }
+    loop {
+        let name = if let Tok::Ident(s) = bump(p) {
+            s
+        } else {
+            return Err("param name".into());
+        };
+        expect(p, Tok::Colon);
+        let ty = parse_type(p)?;
+        ps.push(Param { name, ty });
+        if let Tok::Comma = peek(p) {
+            bump(p);
+            continue;
+        }
+        break;
+    }
+    Ok(ps)
+}
+
+fn parse_func(p: &mut Parser) -> Result<Item, String> {
+    expect(p, Tok::KwFunction);
+    let name = if let Tok::Ident(s) = bump(p) {
+        s
+    } else {
+        return Err("fn name".into());
+    };
+    expect(p, Tok::LParen);
+    let params = parse_params(p)?;
+    expect(p, Tok::RParen);
+    expect(p, Tok::Arrow);
+    let ret = parse_type(p)?;
+    expect(p, Tok::LBrace);
+    let body = parse_block_until(p, Tok::RBrace)?;
+    expect(p, Tok::KwEnd);
+    Ok(Item::Func {
+        name,
+        params,
+        ret,
+        body,
+    })
 }
 
 fn parse_stmt(p: &mut Parser) -> Result<Stmt, String> {
@@ -106,6 +164,15 @@ fn parse_stmt(p: &mut Parser) -> Result<Stmt, String> {
         Tok::KwContinue => {
             bump(p);
             Ok(Stmt::Continue)
+        }
+        Tok::KwReturn => {
+            bump(p);
+            if matches!(peek(p), Tok::RBrace | Tok::KwEnd) {
+                Ok(Stmt::Return(None))
+            } else {
+                let e = parse_expr(p)?;
+                Ok(Stmt::Return(Some(e)))
+            }
         }
         Tok::Eof => Err("eof".into()),
         _ => Err(format!("unexpected token in stmt: {:?}", peek(p))),
@@ -203,7 +270,6 @@ fn parse_block_until(p: &mut Parser, until: Tok) -> Result<Vec<Stmt>, String> {
     Ok(v)
 }
 
-/*** Expressions (Pratt) ***/
 fn bp_infix(op: &Tok) -> Option<(u8, u8)> {
     use Tok::*;
     Some(match op {
@@ -216,7 +282,7 @@ fn bp_infix(op: &Tok) -> Option<(u8, u8)> {
     })
 }
 
-fn parse_expr(p: &mut Parser) -> Result<Expr, String> {
+pub fn parse_expr(p: &mut Parser) -> Result<Expr, String> {
     parse_bp(p, 0)
 }
 
@@ -228,8 +294,27 @@ fn parse_bp(p: &mut Parser, min_bp: u8) -> Result<Expr, String> {
         True => Expr::Bool(true),
         False => Expr::Bool(false),
         Ident(id) => {
-            // ident + member chain (함수 호출 제거)
-            let mut base = Expr::Ident(id);
+            // call or ident/member
+            let mut base = if let LParen = peek(p) {
+                bump(p);
+                let mut args = Vec::new();
+                if let RParen = peek(p) {
+                    bump(p);
+                } else {
+                    loop {
+                        args.push(parse_bp(p, 0)?);
+                        if let Comma = peek(p) {
+                            bump(p);
+                            continue;
+                        }
+                        expect(p, RParen);
+                        break;
+                    }
+                }
+                Expr::Call { name: id, args }
+            } else {
+                Expr::Ident(id)
+            };
             while let Dot = peek(p) {
                 bump(p);
                 if let Ident(k) = bump(p) {
@@ -252,7 +337,7 @@ fn parse_bp(p: &mut Parser, min_bp: u8) -> Result<Expr, String> {
             expect(p, RParen);
             e
         }
-        t => return Err(format!("bad prefix token: {:?}", t)),
+        t => return Err(format!("expr: unexpected token {:?}", t)),
     };
 
     loop {

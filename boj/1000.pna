@@ -1,3 +1,6 @@
 input "" -> A
 input "" -> B
-log A + B
+function f(x: int, y: int) -> int {
+    return x+y
+} end
+log f(A,B)

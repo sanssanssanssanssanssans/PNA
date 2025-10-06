@@ -1,4 +1,18 @@
-#![allow(dead_code)]
+#[derive(Debug, Clone)]
+pub enum Ty {
+    Double,
+    Int,
+    String,
+    Void,
+}
+
+#[derive(Debug, Clone)]
+pub struct Param {
+    pub name: String,
+    #[allow(dead_code)]
+    pub ty: Ty,
+}
+
 #[derive(Debug, Clone)]
 pub enum Expr {
     Num(f64),
@@ -14,6 +28,10 @@ pub enum Expr {
         op: String,
         lhs: Box<Expr>,
         rhs: Box<Expr>,
+    },
+    Call {
+        name: String,
+        args: Vec<Expr>,
     },
 }
 
@@ -59,9 +77,22 @@ pub enum Stmt {
     },
     Break,
     Continue,
+    Return(Option<Expr>),
+}
+
+#[derive(Debug, Clone)]
+pub enum Item {
+    Stmt(Stmt),
+    Func {
+        name: String,
+        params: Vec<Param>,
+        #[allow(dead_code)]
+        ret: Ty,
+        body: Vec<Stmt>,
+    },
 }
 
 #[derive(Debug, Clone)]
 pub struct Program {
-    pub items: Vec<Stmt>,
+    pub items: Vec<Item>,
 }

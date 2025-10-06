@@ -78,10 +78,42 @@ break
 continue
 ```
 
-## 표현식
-- 숫자, 문자열("..."), 불리언(true/false)
-- 연산자: + - * / %, 비교 == != < <= > >=, 논리 && || !
-- 문자열 + 연결 지원
-- 변수 참조:
-    - 객체 속성: user.name
-    - 스칼라 변수: i
+## Functions (new)
+
+### Overview
+- Declare with `function` … `end`.
+- Typed parameters and a typed return.
+- Supported types (for now): `int`, `double`, `string`, `void`
+- Call by value (arguments are evaluated left-to-right).
+- Each call runs in a fresh local environment; outer variables can be **read** but not mutated (writes create/override locals).
+- Return value must match the declared return type; for `void`, you may use `return` with no expression, or just fall through the end.
+
+### Syntax
+```pna
+function add(a:int, b:int) -> int {
+  return a + b
+} end
+
+x: add(2, 3) # 5```
+
+### Type notes
+- `int` / `double` follow standard arithmetic promotions (`+ - * / %`, comparisons).
+- `string + string` concatenates.
+- `string * int` repeats (`int < 0` behaves as 0).
+- `void` functions produce no value; using the result in an expression is invalid.
+
+---
+
+## Expressions
+- Literals: numbers, strings (`"..."`), booleans (`true`/`false`)
+- Operators: `+ - * / %`, `== != < <= > >=`, logical `&& || !`
+- String concatenation: `+`
+- Variable/member: `user.name`, `i`
+
+## I/O Semantics
+- `input "<prompt>" -> target`
+- Reads **one token** (whitespace-delimited) from `stdin`.
+- If the token parses as a number, it’s stored as number; otherwise as string.
+- `log expr` prints with minimal formatting:
+- Numbers that are “effectively integers” print without a decimal point.
+- Other numbers trim trailing zeros.
