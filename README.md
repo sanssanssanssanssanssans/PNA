@@ -94,7 +94,8 @@ function add(a:int, b:int) -> int {
   return a + b
 } end
 
-x: add(2, 3) # 5```
+x: add(2, 3) # 5
+```
 
 ### Type notes
 - `int` / `double` follow standard arithmetic promotions (`+ - * / %`, comparisons).
